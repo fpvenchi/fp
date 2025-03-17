@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Social Media</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #posts-container { margin-top: 20px; }
+        .post { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Simple Social Media</h1>
+
+    <!-- Registrace -->
+    <form id="register-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Register</button>
+    </form>
+
+    <!-- Přihlášení -->
+    <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- Příspěvky -->
+    <form id="post-form">
+        <textarea id="post-text" placeholder="What's on your mind?" required></textarea>
+        <button type="submit">Post</button>
+    </form>
+
+    <div id="posts-container"></div>
+
+    <script>
+        const API_URL = 'https://your-vercel-deployment-url/api'; // Vercel URL
+
+        // Registrace
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        });
+
+        // Přihlášení
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            const response = await fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        });
+
+        // Příspěvek
+        document.getElementById('post-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = document.getElementById('post-text').value;
+
+            const response = await fetch(`${API_URL}/posts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+            loadPosts();
+        });
+
+        // Načtení příspěvků
+        async function loadPosts() {
+            const response = await fetch(`${API_URL}/posts`);
+            const posts = await response.json();
+            const postsContainer = document.getElementById('posts-container');
+            postsContainer.innerHTML = '';
+            posts.forEach(post => {
+                const postDiv = document.createElement('div');
+                postDiv.className = 'post';
+                postDiv.innerHTML = `<p>${post.text}</p>`;
+                postsContainer.appendChild(postDiv);
+            });
+        }
+
+        // Načíst příspěvky při načtení stránky
+        loadPosts();
+    </script>
+</body>
+</html>
