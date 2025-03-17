@@ -34,7 +34,7 @@ app.post('/login', (req, res) => {
 
 // Načtení uživatelů ze souboru
 function loadUsers() {
-    if (!fs.existsSync('users.txt')) {
+    if (!fs.existsSync('users.txt') || fs.readFileSync('users.txt', 'utf-8').trim() === '') {
         return {};
     }
     const data = fs.readFileSync('users.txt', 'utf-8');
