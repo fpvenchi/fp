@@ -1,39 +1,16 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
 
-.login-container {
-    margin-top: 100px;
-}
-
-input[type="text"], input[type="password"] {
-    padding: 10px;
-    margin: 10px 0;
-    width: 80%;
-    max-width: 300px;
+input {
+  display: block;
+  margin: 10px auto;
+  padding: 8px;
+  width: 80%;
+  max-width: 300px;
 }
 
 button {
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #555;
-}
-
-a {
-    color: #333;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
+  padding: 8px 20px;
 }
