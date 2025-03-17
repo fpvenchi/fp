@@ -1,43 +1,32 @@
-async function handleRegister() {
-    const username = document.getElementById('newUsername').value;
-    const password = document.getElementById('newPassword').value;
-    const hashedPassword = await hashPassword(password);
+document.addEventListener('DOMContentLoaded', () => {
+  const registerForm = document.getElementById('register-form');
+  const loginForm = document.getElementById('login-form');
 
-    fetch('/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password: hashedPassword })
-    }).then(response => {
-        if (response.ok) {
-            alert('Registration successful!');
-            window.location.href = 'index.html';
-        } else {
-            alert('User already exists!');
-        }
+  if (registerForm) {
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('register-username').value;
+      const password = document.getElementById('register-password').value;
+      const encryptedPassword = btoa(password); // Jednoduché šifrování base64
+
+      localStorage.setItem(username, encryptedPassword);
+      alert('Registration successful!');
+      window.location.href = 'login.html';
     });
-}
+  }
 
-async function handleLogin() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const hashedPassword = await hashPassword(password);
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      const storedPassword = localStorage.getItem(username);
 
-    fetch('/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password: hashedPassword })
-    }).then(response => {
-        if (response.ok) {
-            alert('Login successful!');
-        } else {
-            alert('Invalid username or password');
-        }
+      if (storedPassword && atob(storedPassword) === password) {
+        alert('Login successful!');
+      } else {
+        alert('Invalid credentials');
+      }
     });
-}
-
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hash)).map(byte => byte.toString(16).padStart(2, '0')).join('');
-}
+  }
+});
